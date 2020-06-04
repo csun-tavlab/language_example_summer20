@@ -5,7 +5,7 @@
 ```
 i is an integer
 e is an expression
-e ::= i | e1 '+' e2 | e1 '-' e2
+e ::= i | e1 '+' e2 | e1 '-' e2 | e1 '*' e2
 ```
 
 ### Tokens ###
