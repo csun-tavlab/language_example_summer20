@@ -38,6 +38,9 @@ public class Tokenizer {
             if (currentChar == '+') {
                 tokens.add(new PlusToken());
                 position++;
+            } else if (currentChar == '-') {
+                tokens.add(new MinusToken());
+                position++;
             } else if (Character.isDigit(currentChar)) {
                 tokens.add(tokenizeInteger());
             } else {
