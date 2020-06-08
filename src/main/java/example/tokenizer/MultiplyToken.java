@@ -1,3 +1,5 @@
+package example.tokenizer;
+
 public class MultiplyToken implements Token {
     @Override
     public String toString() {

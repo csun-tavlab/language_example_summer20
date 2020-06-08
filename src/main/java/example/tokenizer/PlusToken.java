@@ -1,3 +1,5 @@
+package example.tokenizer;
+
 public class PlusToken implements Token {
     // Java gives us the following constructor automatically
     // public PlusToken() {}

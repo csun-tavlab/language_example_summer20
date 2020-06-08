@@ -1,3 +1,5 @@
+package example.tokenizer;
+
 public class MinusToken implements Token {
     @Override
     public String toString() {

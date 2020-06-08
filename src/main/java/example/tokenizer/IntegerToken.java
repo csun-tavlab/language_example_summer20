@@ -1,3 +1,5 @@
+package example.tokenizer;
+
 public class IntegerToken implements Token {
     public final int value;
 

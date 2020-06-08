@@ -4,3 +4,4 @@
 
 # compiled Java files
 *.class
+target
