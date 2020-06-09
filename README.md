@@ -7,8 +7,10 @@
 ```
 i is an integer
 e is an expression
+op is an operator
 
-e ::= i | e1 '+' e2 | e1 '-' e2 | e1 '*' e2
+op ::= '+' | '-' | '*'
+e ::= i | e1 op e2
 ```
 
 ### Concrete Grammar ###
