@@ -30,6 +30,15 @@ public class TokenizerTest {
         assertTokenizes("+", new Token[]{ new PlusToken() });
     }
 
+    // '123+'
+    @Test
+    public void testIntegerPlus() throws TokenizerException {
+        final Token[] expected =
+            new Token[] { new IntegerToken(123),
+                          new PlusToken() };
+        assertTokenizes("123+", expected);
+    }
+        
     // '-' = [-]
     @Test
     public void testMinus() throws TokenizerException {
@@ -46,5 +55,11 @@ public class TokenizerTest {
     @Test
     public void testWhitespace() throws TokenizerException {
         assertTokenizes(" ", new Token[0]);
+    }
+
+    // '$' = exception
+    @Test(expected = TokenizerException.class)
+    public void testInvalidCharacter() throws TokenizerException {
+        assertTokenizes("$", null);
     }
 }

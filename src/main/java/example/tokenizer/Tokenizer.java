@@ -13,6 +13,13 @@ public class Tokenizer {
         this.input = input;
         position = 0;
     }
+
+    private void skipWhitespace() {
+        while (position < input.length() &&
+               Character.isWhitespace(input.charAt(position))) {
+            position++;
+        }
+    } // skipWhitespace
     
     // assumes position starts on a digit
     private IntegerToken tokenizeInteger() {
@@ -36,20 +43,23 @@ public class Tokenizer {
         position = 0;
 
         while (position < input.length()) {
-            final char currentChar = input.charAt(position);
-            if (currentChar == '+') {
-                tokens.add(new PlusToken());
-                position++;
-            } else if (currentChar == '-') {
-                tokens.add(new MinusToken());
-                position++;
-            } else if (currentChar == '*') {
-                tokens.add(new MultiplyToken());
-                position++;
-            } else if (Character.isDigit(currentChar)) {
-                tokens.add(tokenizeInteger());
-            } else {
-                throw new TokenizerException("Invalid character: " + currentChar);
+            skipWhitespace();
+            if (position < input.length()) {
+                final char currentChar = input.charAt(position);
+                if (currentChar == '+') {
+                    tokens.add(new PlusToken());
+                    position++;
+                } else if (currentChar == '-') {
+                    tokens.add(new MinusToken());
+                    position++;
+                } else if (currentChar == '*') {
+                    tokens.add(new MultiplyToken());
+                    position++;
+                } else if (Character.isDigit(currentChar)) {
+                    tokens.add(tokenizeInteger());
+                } else {
+                    throw new TokenizerException("Invalid character: " + currentChar);
+                }
             }
         }
 
