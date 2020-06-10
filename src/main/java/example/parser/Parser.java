@@ -8,6 +8,15 @@ public class Parser {
     public Parser(final Token[] tokens) {
         this.tokens = tokens;
     }
+
+    public Expression parseExpression() throws ParseException {
+        final ParseResult result = parseExpression(0);
+        if (result.nextPosition == tokens.length) {
+            return result.exp;
+        } else {
+            throw new ParseException("Extra tokens at end");
+        }
+    } // parseExpression
     
     public ParseResult parseExpression(final int startPos) throws ParseException {
         return parseAdditive(startPos);
