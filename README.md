@@ -27,6 +27,7 @@ a ::= m (('+' | '-') m)*
 m ::= p ('*' p)*
 p ::= i | '(' e ')'
 ```
+
 ### Tokens ###
 
 - Integer tokens (which hold an integer)

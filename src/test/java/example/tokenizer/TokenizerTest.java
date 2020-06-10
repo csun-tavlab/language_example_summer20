@@ -62,4 +62,16 @@ public class TokenizerTest {
     public void testInvalidCharacter() throws TokenizerException {
         assertTokenizes("$", null);
     }
+
+    // '(' = [(]
+    @Test
+    public void testLeftParen() throws TokenizerException {
+        assertTokenizes("(", new Token[]{ new LeftParenToken() });
+    }
+
+    // ')' = [)]
+    @Test
+    public void testRightParen() throws TokenizerException {
+        assertTokenizes(")", new Token[]{ new RightParenToken() });
+    }
 }
