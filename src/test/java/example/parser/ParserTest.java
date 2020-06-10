@@ -139,4 +139,69 @@ public class ParserTest {
                                    new PlusOp(),
                                    new IntegerExpression(3)));
     }
+
+    // 1 && 2
+    @Test
+    public void parseOneAndTwo() throws ParseException {
+        assertParses(new Token[]{ new IntegerToken(1),
+                                  new AndToken(),
+                                  new IntegerToken(2) },
+            new OperatorExpression(new IntegerExpression(1),
+                                   new AndOp(),
+                                   new IntegerExpression(2)));
+    }
+
+    // 3 || 4
+    @Test
+    public void parseThreeOrFour() throws ParseException {
+        assertParses(new Token[]{ new IntegerToken(3),
+                                  new OrToken(),
+                                  new IntegerToken(4) },
+            new OperatorExpression(new IntegerExpression(3),
+                                   new OrOp(),
+                                   new IntegerExpression(4)));
+    }
+
+    // 1 || 2 && 3
+    @Test
+    public void testAndHigherThanOr() throws ParseException {
+        assertParses(new Token[]{ new IntegerToken(1),
+                                  new OrToken(),
+                                  new IntegerToken(2),
+                                  new AndToken(),
+                                  new IntegerToken(3) },
+            new OperatorExpression(new IntegerExpression(1),
+                                   new OrOp(),
+                                   new OperatorExpression(new IntegerExpression(2),
+                                                          new AndOp(),
+                                                          new IntegerExpression(3))));
+    }
+
+    // 1 || 2 && 3 * 4 + 5
+    // 1 || (2 && ((3 * 4) + 5))
+    @Test
+    public void testAllPrecedence() throws ParseException {
+        final Expression mult = new OperatorExpression(new IntegerExpression(3),
+                                                       new MultiplyOp(),
+                                                       new IntegerExpression(4));
+        final Expression plus = new OperatorExpression(mult,
+                                                       new PlusOp(),
+                                                       new IntegerExpression(5));
+        final Expression and = new OperatorExpression(new IntegerExpression(2),
+                                                      new AndOp(),
+                                                      plus);
+        final Expression or = new OperatorExpression(new IntegerExpression(1),
+                                                     new OrOp(),
+                                                     and);
+        assertParses(new Token[]{ new IntegerToken(1),
+                                  new OrToken(),
+                                  new IntegerToken(2),
+                                  new AndToken(),
+                                  new IntegerToken(3),
+                                  new MultiplyToken(),
+                                  new IntegerToken(4),
+                                  new PlusToken(),
+                                  new IntegerToken(5) },
+            or);
+    }
 }
