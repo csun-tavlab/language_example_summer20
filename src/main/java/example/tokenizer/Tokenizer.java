@@ -69,6 +69,10 @@ public class Tokenizer {
             return new LeftParenToken();
         } else if (inputPrefixMatches(")")) {
             return new RightParenToken();
+        } else if (inputPrefixMatches("true")) {
+            return new BooleanToken(true);
+        } else if (inputPrefixMatches("false")) {
+            return new BooleanToken(false);
         } else {
             return null;
         }

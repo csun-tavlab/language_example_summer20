@@ -10,7 +10,7 @@ e is an expression
 op is an operator
 
 op ::= '+' | '-' | '*' | '/' | '&&' | '||'
-e ::= i | e1 op e2
+e ::= i | true | false | e1 op e2
 ```
 
 ### Concrete Grammar ###
@@ -36,7 +36,7 @@ or ::= and ('||' and)*
 and ::= a ('&&' a)*
 a ::= m (('+' | '-') m)*
 m ::= p (('/' | '*') p)*
-p ::= i | '(' e ')'
+p ::= i | true | false | '(' e ')'
 ```
 
 ### Tokens ###

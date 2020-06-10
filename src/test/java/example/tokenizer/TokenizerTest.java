@@ -92,4 +92,16 @@ public class TokenizerTest {
     public void testOr() throws TokenizerException {
         assertTokenizes("||", new Token[]{ new OrToken() });
     }
+
+    // 'true' = [true]
+    @Test
+    public void testTrue() throws TokenizerException {
+        assertTokenizes("true", new Token[]{ new BooleanToken(true) });
+    }
+
+    // 'false' = [false]
+    @Test
+    public void testFalse() throws TokenizerException {
+        assertTokenizes("false", new Token[]{ new BooleanToken(false) });
+    }
 } // TokenizerTest
