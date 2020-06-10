@@ -9,20 +9,31 @@ i is an integer
 e is an expression
 op is an operator
 
-op ::= '+' | '-' | '*' | '/' 
+op ::= '+' | '-' | '*' | '/' | '&&' | '||'
 e ::= i | e1 op e2
 ```
 
 ### Concrete Grammar ###
 
+Precedence levels, from lowest to highest (based on what Java does):
+
+- `||`
+- `&&`
+- `+`, `-`
+- `*`, `/`
+
 ```
 i is an integer
 e is an expression
+and is an and expression
+or is an or expression
 a is an additive expression
 m is a multiplicative expression
 p is a primary expression
 
-e ::= a
+e ::= or
+or ::= and ('||' and)*
+and ::= a ('&&' a)*
 a ::= m (('+' | '-') m)*
 m ::= p (('/' | '*') p)*
 p ::= i | '(' e ')'

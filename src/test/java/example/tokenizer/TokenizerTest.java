@@ -80,4 +80,16 @@ public class TokenizerTest {
     public void testDivision() throws TokenizerException {
         assertTokenizes("/", new Token[]{ new DivisionToken() });
     }
-}
+
+    // '&&' = [&&]
+    @Test
+    public void testAnd() throws TokenizerException {
+        assertTokenizes("&&", new Token[]{ new AndToken() });
+    }
+    
+    // '||' = [||]
+    @Test
+    public void testOr() throws TokenizerException {
+        assertTokenizes("||", new Token[]{ new OrToken() });
+    }
+} // TokenizerTest

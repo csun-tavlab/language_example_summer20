@@ -1,18 +1,18 @@
 package example.tokenizer;
 
-public class MinusToken implements Token {
+public class OrToken implements Token {
     @Override
     public String toString() {
-        return "-";
+        return "||";
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj instanceof MinusToken;
+        return obj instanceof OrToken;
     }
 
     @Override
     public int hashCode() {
-        return 1;
+        return 5;
     }
-} // MinusToken
+} // OrToken
