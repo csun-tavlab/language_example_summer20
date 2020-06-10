@@ -204,4 +204,18 @@ public class ParserTest {
                                   new IntegerToken(5) },
             or);
     }
+
+    // true
+    @Test
+    public void testTrue() throws ParseException {
+        assertParses(new Token[]{ new BooleanToken(true) },
+                     new BooleanExpression(true));
+    }
+
+    // false
+    @Test
+    public void testFalse() throws ParseException {
+        assertParses(new Token[]{ new BooleanToken(false) },
+                     new BooleanExpression(false));
+    }
 }

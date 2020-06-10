@@ -135,8 +135,12 @@ public class Parser {
     
     public ParseResult parsePrimary(final int startPos) throws ParseException {
         if (readToken(startPos) instanceof IntegerToken) {
-            final IntegerToken asInt = (IntegerToken)tokens[startPos];
+            final IntegerToken asInt = (IntegerToken)readToken(startPos);
             return new ParseResult(new IntegerExpression(asInt.value),
+                                   startPos + 1);
+        } else if (readToken(startPos) instanceof BooleanToken) {
+            final BooleanToken asBool = (BooleanToken)readToken(startPos);
+            return new ParseResult(new BooleanExpression(asBool.value),
                                    startPos + 1);
         } else if (readToken(startPos) instanceof LeftParenToken) {
             final ParseResult inner = parseExpression(startPos + 1);
