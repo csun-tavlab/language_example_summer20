@@ -5,10 +5,7 @@ import org.junit.Test;
 
 import example.tokenizer.*;
 
-public class ParserTest {
-    // 3 - 4
-    // 5 * 6
-    
+public class ParserTest {    
     public static void assertParses(final Token[] tokens,
                                     final Expression expected) throws ParseException {
         final Parser parser = new Parser(tokens);
@@ -42,6 +39,28 @@ public class ParserTest {
                                    new IntegerExpression(2)));
     }
 
+    // 3 - 4
+    @Test
+    public void parseThreeMinusFour() throws ParseException {
+        assertParses(new Token[]{ new IntegerToken(3),
+                                  new MinusToken(),
+                                  new IntegerToken(4) },
+            new OperatorExpression(new IntegerExpression(3),
+                                   new MinusOp(),
+                                   new IntegerExpression(4)));
+    }
+    
+    // 5 * 6
+    @Test
+    public void parseFiveTimesSix() throws ParseException {
+        assertParses(new Token[]{ new IntegerToken(5),
+                                  new MultiplyToken(),
+                                  new IntegerToken(6) },
+            new OperatorExpression(new IntegerExpression(5),
+                                   new MultiplyOp(),
+                                   new IntegerExpression(6)));
+    }
+    
     // 1 + 2 * 3  // 1 + (2 * 3)
     @Test
     public void parsePrecidenceRight() throws ParseException {
