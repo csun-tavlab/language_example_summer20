@@ -19,8 +19,44 @@ public class Parser {
     } // parseExpression
     
     public ParseResult parseExpression(final int startPos) throws ParseException {
-        return parseAdditive(startPos);
+        return parseOrExpression(startPos);
     } // parseExpression
+
+    public ParseResult parseOrExpression(final int startPos) throws ParseException {
+        // or ::= and ('||' and)*
+        ParseResult result = parseAndExpression(startPos);
+
+        try {
+            while (result.nextPosition < tokens.length) {
+                ensureTokenIs(result.nextPosition, new OrToken());
+                final ParseResult nested = parseOrExpression(result.nextPosition + 1);
+                result = new ParseResult(new OperatorExpression(result.exp,
+                                                                new OrOp(),
+                                                                nested.exp),
+                                         nested.nextPosition);
+            }
+        } catch (final ParseException e) {}
+
+        return result;
+    } // parseOrExpression
+
+    public ParseResult parseAndExpression(final int startPos) throws ParseException {
+        // and ::= a ('&&' a)*
+        ParseResult result = parseAdditiveExpression(startPos);
+
+        try {
+            while (result.nextPosition < tokens.length) {
+                ensureTokenIs(result.nextPosition, new AndToken());
+                final ParseResult nested = parseAdditiveExpression(result.nextPosition + 1);
+                result = new ParseResult(new OperatorExpression(result.exp,
+                                                                new AndOp(),
+                                                                nested.exp),
+                                         nested.nextPosition);
+            }
+        } catch (final ParseException e) {}
+
+        return result;
+    } // parseAndExpression
 
     public Op parseAdditiveOp(final int atPos) throws ParseException {
         final Token tokenHere = readToken(atPos);
@@ -34,7 +70,7 @@ public class Parser {
         }
     } // parseAdditiveOp
     
-    public ParseResult parseAdditive(final int startPos) throws ParseException {
+    public ParseResult parseAdditiveExpression(final int startPos) throws ParseException {
         // a ::= m (('+' | '-') m)*
         ParseResult result = parseMultiplicative(startPos);
 
@@ -50,7 +86,7 @@ public class Parser {
         } catch (final ParseException e) {}
 
         return result;
-    } // parseAdditive
+    } // parseAdditiveExpression
     
     public void ensureTokenIs(final int atPos, final Token expectedToken) throws ParseException {
         if (!readToken(atPos).equals(expectedToken)) {
