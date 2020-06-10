@@ -98,4 +98,45 @@ public class ParserTest {
                                   new PlusToken() },
             null);
     }
+
+    // 1 / 2
+    @Test
+    public void parseOneDivTwo() throws ParseException {
+        assertParses(new Token[]{ new IntegerToken(1),
+                                  new DivisionToken(),
+                                  new IntegerToken(2) },
+            new OperatorExpression(new IntegerExpression(1),
+                                   new DivisionOp(),
+                                   new IntegerExpression(2)));
+    }
+    
+    // 1 + 2 / 3
+    @Test
+    public void parseOnePlusTwoDivThreeRight() throws ParseException {
+        assertParses(new Token[]{ new IntegerToken(1),
+                                  new PlusToken(),
+                                  new IntegerToken(2),
+                                  new DivisionToken(),
+                                  new IntegerToken(3) },
+            new OperatorExpression(new IntegerExpression(1),
+                                   new PlusOp(),
+                                   new OperatorExpression(new IntegerExpression(2),
+                                                          new DivisionOp(),
+                                                          new IntegerExpression(3))));
+    }
+    
+    // 1 / 2 + 3
+    @Test
+    public void parseOnePlusTwoDivThreeLeft() throws ParseException {
+        assertParses(new Token[]{ new IntegerToken(1),
+                                  new DivisionToken(),
+                                  new IntegerToken(2),
+                                  new PlusToken(),
+                                  new IntegerToken(3) },
+            new OperatorExpression(new OperatorExpression(new IntegerExpression(1),
+                                                          new DivisionOp(),
+                                                          new IntegerExpression(2)),
+                                   new PlusOp(),
+                                   new IntegerExpression(3)));
+    }
 }
