@@ -61,6 +61,9 @@ public class Tokenizer {
                 } else if (currentChar == ')') {
                     tokens.add(new RightParenToken());
                     position++;
+                } else if (currentChar == '/') {
+                    tokens.add(new DivisionToken());
+                    position++;
                 } else if (Character.isDigit(currentChar)) {
                     tokens.add(tokenizeInteger());
                 } else {

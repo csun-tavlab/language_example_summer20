@@ -9,7 +9,7 @@ i is an integer
 e is an expression
 op is an operator
 
-op ::= '+' | '-' | '*'
+op ::= '+' | '-' | '*' | '/' 
 e ::= i | e1 op e2
 ```
 
@@ -24,7 +24,7 @@ p is a primary expression
 
 e ::= a
 a ::= m (('+' | '-') m)*
-m ::= p ('*' p)*
+m ::= p (('/' | '*') p)*
 p ::= i | '(' e ')'
 ```
 

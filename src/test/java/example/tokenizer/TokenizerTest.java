@@ -74,4 +74,10 @@ public class TokenizerTest {
     public void testRightParen() throws TokenizerException {
         assertTokenizes(")", new Token[]{ new RightParenToken() });
     }
+
+    // '/' = [/]
+    @Test
+    public void testDivision() throws TokenizerException {
+        assertTokenizes("/", new Token[]{ new DivisionToken() });
+    }
 }
