@@ -71,4 +71,12 @@ public class ParserTest {
                                    new PlusOp(),
                                    new IntegerExpression(3)));
     }
+
+    // 1 +
+    @Test(expected = ParseException.class)
+    public void throwErrorOnPlusWithoutRightSide() throws ParseException {
+        assertParses(new Token[]{ new IntegerToken(1),
+                                  new PlusToken() },
+            null);
+    }
 }

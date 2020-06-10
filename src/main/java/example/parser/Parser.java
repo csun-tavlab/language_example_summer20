@@ -23,7 +23,7 @@ public class Parser {
     } // parseExpression
 
     public Op parseAdditiveOp(final int atPos) throws ParseException {
-        final Token tokenHere = tokens[atPos];
+        final Token tokenHere = readToken(atPos);
 
         if (tokenHere instanceof PlusToken) {
             return new PlusOp();
@@ -53,10 +53,18 @@ public class Parser {
     } // parseAdditive
     
     public void ensureTokenIs(final int atPos, final Token expectedToken) throws ParseException {
-        if (!tokens[atPos].equals(expectedToken)) {
+        if (!readToken(atPos).equals(expectedToken)) {
             throw new ParseException("Missing " + expectedToken.toString());
         }
     } // ensureTokenIs
+
+    public Token readToken(final int atPos) throws ParseException {
+        if (atPos < 0 || atPos >= tokens.length) {
+            throw new ParseException("Ran out of tokens");
+        } else {
+            return tokens[atPos];
+        }
+    } // readToken
     
     public ParseResult parseMultiplicative(final int startPos) throws ParseException {
         // m ::= p ('*' p)*
@@ -79,13 +87,13 @@ public class Parser {
     } // parseMultiplicative
     
     public ParseResult parsePrimary(final int startPos) throws ParseException {
-        if (tokens[startPos] instanceof IntegerToken) {
+        if (readToken(startPos) instanceof IntegerToken) {
             final IntegerToken asInt = (IntegerToken)tokens[startPos];
             return new ParseResult(new IntegerExpression(asInt.value),
                                    startPos + 1);
-        } else if (tokens[startPos] instanceof LeftParenToken) {
+        } else if (readToken(startPos) instanceof LeftParenToken) {
             final ParseResult inner = parseExpression(startPos + 1);
-            if (tokens[inner.nextPosition] instanceof RightParenToken) {
+            if (readToken(inner.nextPosition) instanceof RightParenToken) {
                 return new ParseResult(inner.exp,
                                        inner.nextPosition + 1);
             } else {
