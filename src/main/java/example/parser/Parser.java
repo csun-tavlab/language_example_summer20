@@ -65,6 +65,18 @@ public class Parser {
             return tokens[atPos];
         }
     } // readToken
+
+    public Op parseMultiplicativeOp(final int atPos) throws ParseException {
+        final Token tokenHere = readToken(atPos);
+
+        if (tokenHere instanceof MultiplyToken) {
+            return new MultiplyOp();
+        } else if (tokenHere instanceof DivisionToken) {
+            return new DivisionOp();
+        } else {
+            throw new ParseException("Expected multiplicative operator, got: " + tokenHere.toString());
+        }
+    } // parseMultiplicativeOp
     
     public ParseResult parseMultiplicative(final int startPos) throws ParseException {
         // m ::= p ('*' p)*
@@ -73,11 +85,10 @@ public class Parser {
 
         try {
             while (result.nextPosition < tokens.length) {
-                ensureTokenIs(result.nextPosition, new MultiplyToken());
-                //                        one nested p
+                final Op op = parseMultiplicativeOp(result.nextPosition);
                 ParseResult nextPrimary = parsePrimary(result.nextPosition + 1);
                 result = new ParseResult(new OperatorExpression(result.exp,
-                                                                new MultiplyOp(),
+                                                                op,
                                                                 nextPrimary.exp),
                                          nextPrimary.nextPosition);
             }
