@@ -5,12 +5,13 @@
 ### Abstract Grammar ###
 
 ```
+x is a variable
 i is an integer
 e is an expression
 op is an operator
 
 op ::= '+' | '-' | '*' | '/' | '&&' | '||'
-e ::= i | true | false | e1 op e2
+e ::= i | x | true | false | e1 op e2
 ```
 
 ### Concrete Grammar ###

@@ -1,5 +1,6 @@
 package example.tokenizer;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 
@@ -24,6 +25,18 @@ public class TokenizerTest {
         assertTokenizes("123", new Token[]{ new IntegerToken(123) });
     }
 
+    @Test
+    public void testTryReadSingleDigitInteger() {
+        final Tokenizer tokenizer = new Tokenizer("1");
+        assertEquals(new IntegerToken(1), tokenizer.tryReadInteger());
+    }
+
+    @Test
+    public void testTryReadMultiDigitInteger() {
+        final Tokenizer tokenizer = new Tokenizer("123");
+        assertEquals(new IntegerToken(123), tokenizer.tryReadInteger());
+    }
+        
     // '+' = [+]
     @Test
     public void testPlus() throws TokenizerException {
