@@ -23,6 +23,7 @@ public class Tokenizer {
         OPERATIONS.put("(", new LeftParenToken());
         OPERATIONS.put(")", new RightParenToken());
         OPERATIONS.put("=", new EqualsToken());
+        OPERATIONS.put(";", new SemicolonToken());
         
         RESERVED_WORDS = new HashMap<String, Token>();
         RESERVED_WORDS.put("true", new BooleanToken(true));

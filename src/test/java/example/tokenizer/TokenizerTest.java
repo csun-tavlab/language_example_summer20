@@ -172,4 +172,10 @@ public class TokenizerTest {
     public void testEquals() throws TokenizerException {
         assertTokenizes("=", new Token[]{ new EqualsToken() });
     }
+
+    // ';' = [;]
+    @Test
+    public void testSemicolon() throws TokenizerException {
+        assertTokenizes(";", new Token[]{ new SemicolonToken() });
+    }
 } // TokenizerTest

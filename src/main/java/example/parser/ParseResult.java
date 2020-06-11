@@ -1,12 +1,12 @@
 package example.parser;
 
-public class ParseResult {
-    public final Expression exp;
+public class ParseResult<A> {
+    public final A result;
     public final int nextPosition;
 
-    public ParseResult(final Expression exp,
+    public ParseResult(final A result,
                        final int nextPosition) {
-        this.exp = exp;
+        this.result = result;
         this.nextPosition = nextPosition;
     }
 } // ParseResult

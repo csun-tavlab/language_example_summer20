@@ -1,5 +1,8 @@
 package example.parser;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -224,5 +227,30 @@ public class ParserTest {
     public void testVariable() throws ParseException {
         assertParses(new Token[]{ new VariableToken("x") },
                      new VariableExpression("x"));
+    }
+
+    // int x = 7;
+    // bool b = true;
+    @Test
+    public void testProgramWithStatements() throws ParseException {
+        final Token[] tokens = new Token[]{ new IntTypeToken(),
+                                            new VariableToken("x"),
+                                            new EqualsToken(),
+                                            new IntegerToken(7),
+                                            new SemicolonToken(),
+                                            new BoolTypeToken(),
+                                            new VariableToken("b"),
+                                            new EqualsToken(),
+                                            new BooleanToken(true),
+                                            new SemicolonToken() };
+        final List<Statement> statements = new ArrayList<Statement>();
+        statements.add(new AssignmentStatement(new IntType(),
+                                               "x",
+                                               new IntegerExpression(7)));
+        statements.add(new AssignmentStatement(new BoolType(),
+                                               "b",
+                                               new BooleanExpression(true)));
+        final Parser parser = new Parser(tokens);
+        assertEquals(new Program(statements), parser.parseProgram());
     }
 }
