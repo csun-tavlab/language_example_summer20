@@ -134,15 +134,20 @@ public class Parser {
     } // parseMultiplicative
     
     public ParseResult parsePrimary(final int startPos) throws ParseException {
-        if (readToken(startPos) instanceof IntegerToken) {
-            final IntegerToken asInt = (IntegerToken)readToken(startPos);
+        final Token curToken = readToken(startPos);
+        if (curToken instanceof IntegerToken) {
+            final IntegerToken asInt = (IntegerToken)curToken;
             return new ParseResult(new IntegerExpression(asInt.value),
                                    startPos + 1);
-        } else if (readToken(startPos) instanceof BooleanToken) {
-            final BooleanToken asBool = (BooleanToken)readToken(startPos);
+        } else if (curToken instanceof VariableToken) {
+            final VariableToken asVar = (VariableToken)curToken;
+            return new ParseResult(new VariableExpression(asVar.name),
+                                   startPos + 1);
+        } else if (curToken instanceof BooleanToken) {
+            final BooleanToken asBool = (BooleanToken)curToken;
             return new ParseResult(new BooleanExpression(asBool.value),
                                    startPos + 1);
-        } else if (readToken(startPos) instanceof LeftParenToken) {
+        } else if (curToken instanceof LeftParenToken) {
             final ParseResult inner = parseExpression(startPos + 1);
             if (readToken(inner.nextPosition) instanceof RightParenToken) {
                 return new ParseResult(inner.exp,

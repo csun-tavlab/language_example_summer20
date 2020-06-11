@@ -37,7 +37,7 @@ or ::= and ('||' and)*
 and ::= a ('&&' a)*
 a ::= m (('+' | '-') m)*
 m ::= p (('/' | '*') p)*
-p ::= i | true | false | '(' e ')'
+p ::= i | x | true | false | '(' e ')'
 ```
 
 ### Tokens ###

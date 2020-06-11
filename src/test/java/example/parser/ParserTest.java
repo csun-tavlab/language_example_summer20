@@ -218,4 +218,11 @@ public class ParserTest {
         assertParses(new Token[]{ new BooleanToken(false) },
                      new BooleanExpression(false));
     }
+
+    // x
+    @Test
+    public void testVariable() throws ParseException {
+        assertParses(new Token[]{ new VariableToken("x") },
+                     new VariableExpression("x"));
+    }
 }
