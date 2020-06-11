@@ -117,4 +117,41 @@ public class TokenizerTest {
     public void testFalse() throws TokenizerException {
         assertTokenizes("false", new Token[]{ new BooleanToken(false) });
     }
+
+    // 'x' = [x]
+    @Test
+    public void testSingleDigitVariable() throws TokenizerException {
+        assertTokenizes("x", new Token[]{ new VariableToken("x") });
+    }
+
+    // 'xyz' = [xyz]
+    @Test
+    public void testMultiDigitVariable() throws TokenizerException {
+        assertTokenizes("xyz", new Token[]{ new VariableToken("xyz") });
+    }
+
+    // x1 = [x1]
+    @Test
+    public void testVariableContainingInteger() throws TokenizerException {
+        assertTokenizes("x1", new Token[]{ new VariableToken("x1") });
+    }
+
+    // 1x = [1, x]
+    @Test
+    public void testIntegerFollowedByVariable() throws TokenizerException {
+        assertTokenizes("1x", new Token[]{ new IntegerToken(1),
+                                           new VariableToken("x") });
+    }
+
+    // truex = [truex]
+    @Test
+    public void testVariableWithReservedWordPrefix() throws TokenizerException {
+        assertTokenizes("truex", new Token[]{ new VariableToken("truex") });
+    }
+    
+    // xtrue = [xtrue]
+    @Test
+    public void testVariableWithReservedWordSuffix() throws TokenizerException {
+        assertTokenizes("xtrue", new Token[]{ new VariableToken("xtrue") });
+    }
 } // TokenizerTest
