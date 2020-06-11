@@ -22,10 +22,13 @@ public class Tokenizer {
         OPERATIONS.put("||", new OrToken());
         OPERATIONS.put("(", new LeftParenToken());
         OPERATIONS.put(")", new RightParenToken());
+        OPERATIONS.put("=", new EqualsToken());
         
         RESERVED_WORDS = new HashMap<String, Token>();
         RESERVED_WORDS.put("true", new BooleanToken(true));
         RESERVED_WORDS.put("false", new BooleanToken(false));
+        RESERVED_WORDS.put("int", new IntTypeToken());
+        RESERVED_WORDS.put("bool", new BoolTypeToken());
     }
     // ---END CONSTANTS---
     

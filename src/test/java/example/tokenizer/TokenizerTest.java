@@ -130,28 +130,46 @@ public class TokenizerTest {
         assertTokenizes("xyz", new Token[]{ new VariableToken("xyz") });
     }
 
-    // x1 = [x1]
+    // 'x1' = [x1]
     @Test
     public void testVariableContainingInteger() throws TokenizerException {
         assertTokenizes("x1", new Token[]{ new VariableToken("x1") });
     }
 
-    // 1x = [1, x]
+    // '1x' = [1, x]
     @Test
     public void testIntegerFollowedByVariable() throws TokenizerException {
         assertTokenizes("1x", new Token[]{ new IntegerToken(1),
                                            new VariableToken("x") });
     }
 
-    // truex = [truex]
+    // 'truex' = [truex]
     @Test
     public void testVariableWithReservedWordPrefix() throws TokenizerException {
         assertTokenizes("truex", new Token[]{ new VariableToken("truex") });
     }
     
-    // xtrue = [xtrue]
+    // 'xtrue' = [xtrue]
     @Test
     public void testVariableWithReservedWordSuffix() throws TokenizerException {
         assertTokenizes("xtrue", new Token[]{ new VariableToken("xtrue") });
+    }
+
+    // 'int' = [int]
+    @Test
+    public void testIntType() throws TokenizerException {
+        assertTokenizes("int", new Token[]{ new IntTypeToken() });
+    }
+
+    // 'bool' = [bool]
+    @Test
+    public void testBoolType() throws TokenizerException {
+        assertTokenizes("bool", new Token[]{ new BoolTypeToken() });
+    }
+
+    // '=' = [=]
+    @Test
+    public void testEquals() throws TokenizerException {
+        assertTokenizes("=", new Token[]{ new EqualsToken() });
     }
 } // TokenizerTest

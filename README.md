@@ -9,9 +9,15 @@ x is a variable
 i is an integer
 e is an expression
 op is an operator
+t is a type
+s is a statement
+prog is a program
 
+t ::= 'int' | 'bool'
+s ::= t x '=' e ';'
 op ::= '+' | '-' | '*' | '/' | '&&' | '||'
 e ::= i | x | true | false | e1 op e2
+prog ::= s*
 ```
 
 ### Concrete Grammar ###
@@ -38,13 +44,7 @@ and ::= a ('&&' a)*
 a ::= m (('+' | '-') m)*
 m ::= p (('/' | '*') p)*
 p ::= i | x | true | false | '(' e ')'
-```
-
-### Tokens ###
-
-- Integer tokens (which hold an integer)
-- Plus token (holds nothing)
-
-```
-1 + 2: [INTEGER_TOKEN(1), PLUS_TOKEN, INTEGER_TOKEN(2)]
+t ::= 'int' | 'bool'
+s ::= t x '=' e ';'
+prog ::= s*
 ```
