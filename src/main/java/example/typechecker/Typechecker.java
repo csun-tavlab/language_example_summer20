@@ -10,9 +10,19 @@ public class Typechecker {
     private final Map<String, Type> typeEnv;
     // ---END INSTANCE VARIABLES---
 
+    public Typechecker() {
+        this(new HashMap<String, Type>());
+    } // Typechecker
+    
     public Typechecker(final Map<String, Type> typeEnv) {
         this.typeEnv = typeEnv;
     } // Typechecker
+
+    // returns the type of the given variable, or null
+    // if it's not in scope
+    public Type variableType(final String variable) {
+        return typeEnv.get(variable);
+    } // variableType
     
     public void isWellTyped(final Program program) throws IllTypedException {
         for (final Statement statement : program.statements) {
@@ -41,7 +51,7 @@ public class Typechecker {
             return new IntType();
         } else if (expression instanceof VariableExpression) {
             final String variableName = ((VariableExpression)expression).name;
-            final Type variableType = typeEnv.get(variableName);
+            final Type variableType = variableType(variableName);
             if (variableType == null) {
                 throw new IllTypedException("variable not in scope: " + variableName);
             } else {

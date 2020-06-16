@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 public class TypecheckerTest {
     // ---BEGIN CONSTANTS---
@@ -22,7 +24,7 @@ public class TypecheckerTest {
     // 1: int
     @Test
     public void integerHasTypeInt() throws IllTypedException {
-        final Typechecker typechecker = new Typechecker(new HashMap<String, Type>());
+        final Typechecker typechecker = new Typechecker();
         final Type gotType = typechecker.typeOfExpression(new IntegerExpression(1));
         assertEquals(new IntType(), gotType);
     } // integerHasTypeInt
@@ -50,7 +52,7 @@ public class TypecheckerTest {
     // [] x: ill-typed
     @Test(expected = IllTypedException.class)
     public void noVariableInScopeInEmptyTypeEnvironment() throws IllTypedException {
-        final Typechecker typechecker = new Typechecker(new HashMap<String, Type>());
+        final Typechecker typechecker = new Typechecker();
         typechecker.typeOfExpression(new VariableExpression("x"));
     } // noVariableInScopeInEmptyTypeEnvironment
 
@@ -66,7 +68,7 @@ public class TypecheckerTest {
     // true: bool
     @Test
     public void trueIsBoolean() throws IllTypedException {
-        final Typechecker typechecker = new Typechecker(new HashMap<String, Type>());
+        final Typechecker typechecker = new Typechecker();
         final Type gotType = typechecker.typeOfExpression(new BooleanExpression(true));
         assertEquals(new BoolType(), gotType);
     } // trueIsBoolean
@@ -74,7 +76,7 @@ public class TypecheckerTest {
     // false: bool
     @Test
     public void falseIsBoolean() throws IllTypedException {
-        final Typechecker typechecker = new Typechecker(new HashMap<String, Type>());
+        final Typechecker typechecker = new Typechecker();
         final Type gotType = typechecker.typeOfExpression(new BooleanExpression(false));
         assertEquals(new BoolType(), gotType);
     } // falseIsBoolean
@@ -92,7 +94,7 @@ public class TypecheckerTest {
     // int / int = int
     @Test
     public void testArithmeticOperations() throws IllTypedException {
-        final Typechecker typechecker = new Typechecker(new HashMap<String, Type>());
+        final Typechecker typechecker = new Typechecker();
         final Expression left = new IntegerExpression(1);
         final Expression right = new IntegerExpression(2);
         for (final Op op : ARITHMETIC_OPS) {
@@ -107,7 +109,7 @@ public class TypecheckerTest {
     // true / 1: ill-typed
     @Test
     public void testArithmeticIllTypedLeft() {
-        final Typechecker typechecker = new Typechecker(new HashMap<String, Type>());
+        final Typechecker typechecker = new Typechecker();
 
         for (final Op op : ARITHMETIC_OPS) {
             final Expression exp = new OperatorExpression(new BooleanExpression(true),
@@ -126,7 +128,7 @@ public class TypecheckerTest {
     // 1 / true: ill-typed
     @Test
     public void testArithmeticIllTypedRight() {
-        final Typechecker typechecker = new Typechecker(new HashMap<String, Type>());
+        final Typechecker typechecker = new Typechecker();
 
         for (final Op op : ARITHMETIC_OPS) {
             final Expression exp = new OperatorExpression(new IntegerExpression(1),
@@ -143,7 +145,7 @@ public class TypecheckerTest {
     // bool || bool = bool
     @Test
     public void testBooleanOperations() throws IllTypedException {
-        final Typechecker typechecker = new Typechecker(new HashMap<String, Type>());
+        final Typechecker typechecker = new Typechecker();
         final Expression left = new BooleanExpression(true);
         final Expression right = new BooleanExpression(false);
         for (final Op op : BOOLEAN_OPS) {
@@ -151,4 +153,64 @@ public class TypecheckerTest {
             assertEquals(new BoolType(), typechecker.typeOfExpression(input));
         }
     } // testBooleanOperations
+
+    // int x = 7;
+    @Test
+    public void testVarDecInScope() throws IllTypedException {
+        final Typechecker typechecker = new Typechecker();
+        final Statement stmt =
+            new VariableDeclarationInitializationStatement(new IntType(),
+                                                           "x",
+                                                           new IntegerExpression(7));
+        typechecker.isWellTyped(stmt);
+        assertEquals(new IntType(), typechecker.variableType("x"));
+    } // testVarDecInScope
+
+    // int x = true;
+    @Test(expected = IllTypedException.class)
+    public void testVarDecRejectsTypeMismatch() throws IllTypedException {
+        final Typechecker typechecker = new Typechecker();
+        final Statement stmt =
+            new VariableDeclarationInitializationStatement(new IntType(),
+                                                           "x",
+                                                           new BooleanExpression(true));
+        typechecker.isWellTyped(stmt);
+    } // testVarDecRejectsTypeMismatch
+
+    // int x = 5;
+    // int y = x + x;
+    @Test
+    public void testWholeProgramMultipleIntVariables() throws IllTypedException {
+        final List<Statement> statements = new ArrayList<Statement>();
+        statements.add(new VariableDeclarationInitializationStatement(new IntType(),
+                                                                      "x",
+                                                                      new IntegerExpression(5)));
+        final Statement secondStatement =
+            new VariableDeclarationInitializationStatement(new IntType(),
+                                                           "y",
+                                                           new OperatorExpression(new VariableExpression("x"),
+                                                                                  new PlusOp(),
+                                                                                  new VariableExpression("x")));
+        statements.add(secondStatement);
+        
+        final Program program = new Program(statements);
+        final Typechecker typechecker = new Typechecker();
+        typechecker.isWellTyped(program);
+        assertEquals(new IntType(), typechecker.variableType("x"));
+        assertEquals(new IntType(), typechecker.variableType("y"));
+    } // testWholeProgramMultipleIntVariables
+
+    // bool x = 7;
+    @Test(expected = IllTypedException.class)
+    public void testWholeProgramRejectedOnTypeError() throws IllTypedException {
+        final Typechecker typechecker = new Typechecker();
+        final List<Statement> statements = new ArrayList<Statement>();
+        final Statement stmt =
+            new VariableDeclarationInitializationStatement(new BoolType(),
+                                                           "x",
+                                                           new IntegerExpression(7));
+        statements.add(stmt);
+        final Program program = new Program(statements);
+        typechecker.isWellTyped(program);
+    } // testWholeProgramRejectedOnTypeError
 } // TypecheckerTest
