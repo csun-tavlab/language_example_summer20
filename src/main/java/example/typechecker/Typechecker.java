@@ -14,8 +14,25 @@ public class Typechecker {
         this.typeEnv = typeEnv;
     } // Typechecker
     
-    public static void isWellTyped(final Program program) throws IllTypedException {
-    }
+    public void isWellTyped(final Program program) throws IllTypedException {
+        for (final Statement statement : program.statements) {
+            isWellTyped(statement);
+        }
+    } // isWellTyped(Program)
+
+    public void isWellTyped(final Statement statement) throws IllTypedException {
+        if (statement instanceof VariableDeclarationInitializationStatement) {
+            final VariableDeclarationInitializationStatement asDec =
+                (VariableDeclarationInitializationStatement)statement;
+            if (typeOfExpression(asDec.expression).equals(asDec.type)) {
+                typeEnv.put(asDec.variableName, asDec.type);
+            } else {
+                throw new IllTypedException("Variable type mismatch on initialization: " + asDec.variableName);
+            }
+        } else {
+            throw new IllTypedException("Unrecognized statement: " + statement);
+        }
+    } // isWellTyped(Statement)
 
     // typeOfExpression(1) // IntType
     // typeOfExpression(true) // BoolType
