@@ -1,13 +1,13 @@
 package example.parser;
 
-public class AssignmentStatement implements Statement {
+public class VariableDeclarationInitializationStatement implements Statement {
     public final Type type;
     public final String variableName;
     public final Expression expression;
 
-    public AssignmentStatement(final Type type,
-                               final String variableName,
-                               final Expression expression) {
+    public VariableDeclarationInitializationStatement(final Type type,
+                                                      final String variableName,
+                                                      final Expression expression) {
         this.type = type;
         this.variableName = variableName;
         this.expression = expression;
@@ -15,8 +15,9 @@ public class AssignmentStatement implements Statement {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj instanceof AssignmentStatement) {
-            final AssignmentStatement asAssign = (AssignmentStatement)obj;
+        if (obj instanceof VariableDeclarationInitializationStatement) {
+            final VariableDeclarationInitializationStatement asAssign =
+                (VariableDeclarationInitializationStatement)obj;
             return (type.equals(asAssign.type) &&
                     variableName.equals(asAssign.variableName) &&
                     expression.equals(asAssign.expression));
@@ -41,4 +42,4 @@ public class AssignmentStatement implements Statement {
                 expression.toString() +
                 ";");
     }
-} // AssignmentStatement
+} // VariableDeclarationInitializationStatement

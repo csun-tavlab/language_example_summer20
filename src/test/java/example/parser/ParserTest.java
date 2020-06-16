@@ -244,12 +244,12 @@ public class ParserTest {
                                             new BooleanToken(true),
                                             new SemicolonToken() };
         final List<Statement> statements = new ArrayList<Statement>();
-        statements.add(new AssignmentStatement(new IntType(),
-                                               "x",
-                                               new IntegerExpression(7)));
-        statements.add(new AssignmentStatement(new BoolType(),
-                                               "b",
-                                               new BooleanExpression(true)));
+        statements.add(new VariableDeclarationInitializationStatement(new IntType(),
+                                                                      "x",
+                                                                      new IntegerExpression(7)));
+        statements.add(new VariableDeclarationInitializationStatement(new BoolType(),
+                                                                      "b",
+                                                                      new BooleanExpression(true)));
         final Parser parser = new Parser(tokens);
         assertEquals(new Program(statements), parser.parseProgram());
     }

@@ -184,7 +184,7 @@ public class Parser {
     } // parseVariable
     
     public ParseResult<Statement> parseStatement(final int startPos) throws ParseException {
-        // currently this is hard-coded for assignment statements, because
+        // currently this is hard-coded for variable declaration/initialization statements, because
         // this is the only kind of statement we have
         // s ::= t x '=' e ';'
 
@@ -193,9 +193,9 @@ public class Parser {
         ensureTokenIs(variableName.nextPosition, new EqualsToken());
         final ParseResult<Expression> expression = parseExpression(variableName.nextPosition + 1);
         ensureTokenIs(expression.nextPosition, new SemicolonToken());
-        return new ParseResult<Statement>(new AssignmentStatement(type.result,
-                                                                  variableName.result,
-                                                                  expression.result),
+        return new ParseResult<Statement>(new VariableDeclarationInitializationStatement(type.result,
+                                                                                         variableName.result,
+                                                                                         expression.result),
                                           expression.nextPosition + 1);
     } // parseStatement
 
