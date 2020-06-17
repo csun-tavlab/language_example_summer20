@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
 
 public class Tokenizer {
     // ---BEGIN CONSTANTS---
@@ -149,6 +152,25 @@ public class Tokenizer {
         return tokens.toArray(new Token[tokens.size()]);
     } // tokenize
 
+    public static String readFileContents(final String filename) throws IOException {
+        final StringBuffer buffer = new StringBuffer();
+        final Scanner scanner = new Scanner(new File(filename));
+
+        try {
+            while (scanner.hasNextLine()) {
+                buffer.append(scanner.nextLine());
+            }
+        } finally {
+            scanner.close();
+        }
+
+        return buffer.toString();
+    } // readFileContents
+    
+    public static Tokenizer makeTokenizerFromFile(final String filename) throws IOException {
+        return new Tokenizer(readFileContents(filename));
+    } // makeTokenizerFromFile
+    
     public static void main(final String[] args) throws TokenizerException {
         if (args.length != 1) {
             System.out.println("Needs a string to tokenize");
