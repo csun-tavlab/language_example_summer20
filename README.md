@@ -48,3 +48,14 @@ t ::= 'int' | 'bool'
 s ::= t x '=' e ';'
 prog ::= s*
 ```
+
+## Running the Compiler ##
+
+```
+mvn exec:java -Dexec.mainClass="example.ExampleCompiler" -Dexec.args="input_program.txt output_program.js"
+```
+
+...where
+
+- `input_program.txt`: the input program in this example language
+- `output_program.js`: name of an output file where equivalent JavaScript will be written
