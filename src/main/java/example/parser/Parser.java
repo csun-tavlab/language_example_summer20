@@ -64,15 +64,23 @@ public class Parser {
     public Op parseAdditiveOp(final int atPos) throws ParseException {
         final Token tokenHere = readToken(atPos);
 
-        if (tokenHere instanceof PlusToken) {
-            return new PlusOp();
-        } else if (tokenHere instanceof MinusToken) {
-            return new MinusOp();
-        } else {
-            throw new ParseException("Expected additive operator, got: " + tokenHere.toString());
+        class AdditiveOpVisitor extends DefaultTokenVisitor<Op, ParseException> {
+            public Op defaultAction() throws ParseException {
+                throw new ParseException("expected additive operator, got: " + tokenHere);
+            }
+            @Override
+            public Op visitPlusToken() throws ParseException {
+                return new PlusOp();
+            }
+            @Override
+            public Op visitMinusToken() throws ParseException {
+                return new MinusOp();
+            }
         }
+
+        return tokenHere.accept(new AdditiveOpVisitor());
     } // parseAdditiveOp
-    
+        
     public ParseResult<Expression> parseAdditiveExpression(final int startPos) throws ParseException {
         // a ::= m (('+' | '-') m)*
         ParseResult<Expression> result = parseMultiplicative(startPos);
