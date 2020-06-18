@@ -22,4 +22,8 @@ public class BooleanToken implements Token {
     public String toString() {
         return Boolean.toString(value);
     }
+
+    public <A, E extends Throwable> A accept(final TokenVisitor<A, E> visitor) throws E {
+        return visitor.visitBooleanToken(value);
+    }
 } // BooleanToken

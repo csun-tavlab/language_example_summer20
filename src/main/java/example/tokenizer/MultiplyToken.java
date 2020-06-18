@@ -15,4 +15,8 @@ public class MultiplyToken implements Token {
     public int hashCode() {
         return 2;
     }
+
+    public <A, E extends Throwable> A accept(final TokenVisitor<A, E> visitor) throws E {
+        return visitor.visitMultiplyToken();
+    }
 }

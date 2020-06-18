@@ -15,4 +15,8 @@ public class EqualsToken implements Token {
     public int hashCode() {
         return 8;
     }
+
+    public <A, E extends Throwable> A accept(final TokenVisitor<A, E> visitor) throws E {
+        return visitor.visitEqualsToken();
+    }
 } // EqualsToken

@@ -15,4 +15,8 @@ public class DivisionToken implements Token {
     public int hashCode() {
         return 3;
     }
+
+    public <A, E extends Throwable> A accept(final TokenVisitor<A, E> visitor) throws E {
+        return visitor.visitDivisionToken();
+    }
 } // DivisionToken

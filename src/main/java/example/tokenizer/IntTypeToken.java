@@ -15,5 +15,9 @@ public class IntTypeToken implements Token {
     public int hashCode() {
         return 6;
     }
+    
+    public <A, E extends Throwable> A accept(final TokenVisitor<A, E> visitor) throws E {
+        return visitor.visitIntTypeToken();
+    }
 } // IntTypeToken
 

@@ -15,4 +15,8 @@ public class RightParenToken implements Token {
     public int hashCode() {
         return 4;
     }
+
+    public <A, E extends Throwable> A accept(final TokenVisitor<A, E> visitor) throws E {
+        return visitor.visitRightParenToken();
+    }
 } // RightParenToken

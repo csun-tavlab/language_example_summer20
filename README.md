@@ -16,7 +16,7 @@ prog is a program
 t ::= 'int' | 'bool'
 s ::= t x '=' e ';'
 op ::= '+' | '-' | '*' | '/' | '&&' | '||'
-e ::= i | x | true | false | e1 op e2
+e ::= i | x | 'true' | 'false' | e1 op e2
 prog ::= s*
 ```
 
@@ -43,7 +43,7 @@ or ::= and ('||' and)*
 and ::= a ('&&' a)*
 a ::= m (('+' | '-') m)*
 m ::= p (('/' | '*') p)*
-p ::= i | x | true | false | '(' e ')'
+p ::= i | x | 'true' | 'false' | '(' e ')'
 t ::= 'int' | 'bool'
 s ::= t x '=' e ';'
 prog ::= s*

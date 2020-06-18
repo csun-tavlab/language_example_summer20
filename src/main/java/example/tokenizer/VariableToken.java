@@ -22,4 +22,8 @@ public class VariableToken implements Token {
     public String toString() {
         return name;
     }
+
+    public <A, E extends Throwable> A accept(final TokenVisitor<A, E> visitor) throws E {
+        return visitor.visitVariableToken(name);
+    }
 } // VariableToken
