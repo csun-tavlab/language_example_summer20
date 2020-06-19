@@ -22,4 +22,8 @@ public class IntegerExpression implements Expression {
     public String toString() {
         return Integer.toString(value);
     }
+
+    public <A, E extends Throwable> A accept(final ExpressionVisitor<A, E> visitor) throws E {
+        return visitor.visitIntegerExpression(value);
+    } // accept
 } // IntegerExpression

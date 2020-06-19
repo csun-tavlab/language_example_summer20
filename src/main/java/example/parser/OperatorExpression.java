@@ -42,4 +42,8 @@ public class OperatorExpression implements Expression {
                 e2.toString() +
                 ")");
     }
+
+    public <A, E extends Throwable> A accept(final ExpressionVisitor<A, E> visitor) throws E {
+        return visitor.visitOperatorExpression(e1, op, e2);
+    } // accept
 } // OperatorExpression

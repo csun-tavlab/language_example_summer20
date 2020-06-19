@@ -22,4 +22,8 @@ public class BooleanExpression implements Expression {
     public String toString() {
         return Boolean.toString(value);
     }
+
+    public <A, E extends Throwable> A accept(final ExpressionVisitor<A, E> visitor) throws E {
+        return visitor.visitBooleanExpression(value);
+    } // accept
 } // BooleanExpression

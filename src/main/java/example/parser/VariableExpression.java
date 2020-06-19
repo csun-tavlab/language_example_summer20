@@ -22,4 +22,8 @@ public class VariableExpression implements Expression {
     public String toString() {
         return name;
     }
+
+    public <A, E extends Throwable> A accept(final ExpressionVisitor<A, E> visitor) throws E {
+        return visitor.visitVariableExpression(name);
+    } // accept
 } // VariableExpression
