@@ -31,17 +31,22 @@ public class Typechecker {
     } // isWellTyped(Program)
 
     public void isWellTyped(final Statement statement) throws IllTypedException {
-        if (statement instanceof VariableDeclarationInitializationStatement) {
-            final VariableDeclarationInitializationStatement asDec =
-                (VariableDeclarationInitializationStatement)statement;
-            if (typeOfExpression(asDec.expression).equals(asDec.type)) {
-                typeEnv.put(asDec.variableName, asDec.type);
-            } else {
-                throw new IllTypedException("Variable type mismatch on initialization: " + asDec.variableName);
-            }
-        } else {
-            throw new IllTypedException("Unrecognized statement: " + statement);
-        }
+        // Object is just a dummy placeholder.  We have to return something in the visitor,
+        // but the only thing we care about is whether or not it threw an exception.
+        class WellTypedStatementVisitor implements StatementVisitor<Object, IllTypedException> {
+            public Object visitVariableDeclarationInitializationStatement(final Type type,
+                                                                          final String variableName,
+                                                                          final Expression expression) throws IllTypedException {
+                if (typeOfExpression(expression).equals(type)) {
+                    typeEnv.put(variableName, type);
+                    return null;
+                } else {
+                    throw new IllTypedException("Variable type mismatch on initialization: " + variableName);
+                }
+            } // visitVariableDeclarationInitializationStatement
+        } // WellTypedStatementVisitor
+
+        statement.accept(new WellTypedStatementVisitor());
     } // isWellTyped(Statement)
 
     // typeOfExpression(1) // IntType
