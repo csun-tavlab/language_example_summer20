@@ -15,4 +15,8 @@ public class PlusOp implements Op {
     public String toString() {
         return "+";
     }
+
+    public <A, E extends Throwable> A accept(final OpVisitor<A, E> visitor) throws E {
+        return visitor.visitPlusOp();
+    } // accept
 } // PlusOp
