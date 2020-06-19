@@ -76,19 +76,19 @@ public class Parser {
             public Op visitMinusToken() throws ParseException {
                 return new MinusOp();
             }
-        }
+        } // AdditiveOpVisitor
 
         return tokenHere.accept(new AdditiveOpVisitor());
     } // parseAdditiveOp
         
     public ParseResult<Expression> parseAdditiveExpression(final int startPos) throws ParseException {
         // a ::= m (('+' | '-') m)*
-        ParseResult<Expression> result = parseMultiplicative(startPos);
+        ParseResult<Expression> result = parseMultiplicativeExpression(startPos);
 
         try {
             while (result.nextPosition < tokens.length) {
                 final Op op = parseAdditiveOp(result.nextPosition);
-                final ParseResult<Expression> innerMultiplicative = parseMultiplicative(result.nextPosition + 1);
+                final ParseResult<Expression> innerMultiplicative = parseMultiplicativeExpression(result.nextPosition + 1);
                 result = new ParseResult<Expression>(new OperatorExpression(result.result,
                                                                             op,
                                                                             innerMultiplicative.result),
@@ -116,16 +116,24 @@ public class Parser {
     public Op parseMultiplicativeOp(final int atPos) throws ParseException {
         final Token tokenHere = readToken(atPos);
 
-        if (tokenHere instanceof MultiplyToken) {
-            return new MultiplyOp();
-        } else if (tokenHere instanceof DivisionToken) {
-            return new DivisionOp();
-        } else {
-            throw new ParseException("Expected multiplicative operator, got: " + tokenHere.toString());
-        }
+        class MultiplicativeOpVisitor extends DefaultTokenVisitor<Op, ParseException> {
+            public Op defaultAction() throws ParseException {
+                throw new ParseException("expected multiplicative operator, got: " + tokenHere);
+            }
+            @Override
+            public Op visitMultiplyToken() throws ParseException {
+                return new MultiplyOp();
+            }
+            @Override
+            public Op visitDivisionToken() throws ParseException {
+                return new DivisionOp();
+            }
+        } // MultiplicativeOpVisitor
+
+        return tokenHere.accept(new MultiplicativeOpVisitor());
     } // parseMultiplicativeOp
     
-    public ParseResult<Expression> parseMultiplicative(final int startPos) throws ParseException {
+    public ParseResult<Expression> parseMultiplicativeExpression(final int startPos) throws ParseException {
         // m ::= p ('*' p)*
         //                   initial p (goes on left)
         ParseResult<Expression> result = parsePrimary(startPos);
@@ -142,7 +150,7 @@ public class Parser {
         } catch (final ParseException e) {}
 
         return result;
-    } // parseMultiplicative
+    } // parseMultiplicativeExpression
     
     public ParseResult<Expression> parsePrimary(final int startPos) throws ParseException {
         final Token curToken = readToken(startPos);
