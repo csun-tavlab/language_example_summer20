@@ -15,4 +15,8 @@ public class BoolType implements Type {
     public String toString() {
         return "bool";
     }
+
+    public <A, E extends Throwable> A accept(final TypeVisitor<A, E> visitor) throws E {
+        return visitor.visitBoolType();
+    } // accept
 } // BoolType

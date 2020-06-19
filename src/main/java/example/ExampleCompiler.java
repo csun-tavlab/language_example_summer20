@@ -12,7 +12,6 @@ import example.typechecker.Typechecker;
 import example.typechecker.IllTypedException;
 
 import example.code_generator.CodeGenerator;
-import example.code_generator.CodeGeneratorException;
 
 import java.io.IOException;
 import java.io.FileWriter;
@@ -42,8 +41,7 @@ public class ExampleCompiler {
         throws IOException,
                TokenizerException,
                ParseException,
-               IllTypedException,
-               CodeGeneratorException {
+               IllTypedException {
         final Tokenizer tokenizer = Tokenizer.makeTokenizerFromFile(inputFilename);
         final Token[] tokens = tokenizer.tokenize();
         final Parser parser = new Parser(tokens);
@@ -60,8 +58,7 @@ public class ExampleCompiler {
         throws IOException,
                TokenizerException,
                ParseException,
-               IllTypedException,
-               CodeGeneratorException {
+               IllTypedException {
         if (args.length == 2) {
             doCompile(args[0], args[1]);
         } else {

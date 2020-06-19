@@ -10,7 +10,7 @@ import org.junit.Test;
 
 public class CodeGeneratorTest {
     @Test
-    public void emptyProgram() throws CodeGeneratorException {
+    public void emptyProgram() {
         final Program program = new Program(new ArrayList<Statement>());
         final CodeGenerator generator = new CodeGenerator();
         generator.writeProgram(program);
@@ -19,7 +19,7 @@ public class CodeGeneratorTest {
 
     // int x = 7;
     @Test
-    public void integerDeclaration() throws CodeGeneratorException {
+    public void integerDeclaration() {
         final List<Statement> statements = new ArrayList<Statement>();
         final VariableDeclarationInitializationStatement statement =
             new VariableDeclarationInitializationStatement(new IntType(),

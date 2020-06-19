@@ -15,4 +15,8 @@ public class IntType implements Type {
     public String toString() {
         return "int";
     }
+
+    public <A, E extends Throwable> A accept(final TypeVisitor<A, E> visitor) throws E {
+        return visitor.visitIntType();
+    } // accept
 } // IntType
