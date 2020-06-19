@@ -202,11 +202,17 @@ public class Parser {
 
     public ParseResult<String> parseVariable(final int startPos) throws ParseException {
         final Token curToken = readToken(startPos);
-        if (curToken instanceof VariableToken) {
-            return new ParseResult<String>(((VariableToken)curToken).name, startPos + 1);
-        } else {
-            throw new ParseException("Expected variable; got: " + curToken);
-        }
+
+        class VariableVisitor extends DefaultTokenVisitor<ParseResult<String>, ParseException> {
+            public ParseResult<String> defaultAction() throws ParseException {
+                throw new ParseException("Expected variable; got: " + curToken);
+            }
+            public ParseResult<String> visitVariableToken(final String name) throws ParseException {
+                return new ParseResult<String>(name, startPos + 1);
+            }
+        } // VariableVisitor
+
+        return curToken.accept(new VariableVisitor());
     } // parseVariable
     
     public ParseResult<Statement> parseStatement(final int startPos) throws ParseException {
