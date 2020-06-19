@@ -151,32 +151,35 @@ public class Parser {
 
         return result;
     } // parseMultiplicativeExpression
-    
+
     public ParseResult<Expression> parsePrimary(final int startPos) throws ParseException {
         final Token curToken = readToken(startPos);
-        if (curToken instanceof IntegerToken) {
-            final IntegerToken asInt = (IntegerToken)curToken;
-            return new ParseResult<Expression>(new IntegerExpression(asInt.value),
-                                               startPos + 1);
-        } else if (curToken instanceof VariableToken) {
-            final VariableToken asVar = (VariableToken)curToken;
-            return new ParseResult<Expression>(new VariableExpression(asVar.name),
-                                               startPos + 1);
-        } else if (curToken instanceof BooleanToken) {
-            final BooleanToken asBool = (BooleanToken)curToken;
-            return new ParseResult<Expression>(new BooleanExpression(asBool.value),
-                                               startPos + 1);
-        } else if (curToken instanceof LeftParenToken) {
-            final ParseResult<Expression> inner = parseExpression(startPos + 1);
-            if (readToken(inner.nextPosition) instanceof RightParenToken) {
+
+        class PrimaryVisitor extends DefaultTokenVisitor<ParseResult<Expression>, ParseException> {
+            public ParseResult<Expression> defaultAction() throws ParseException {
+                throw new ParseException("not a primary expression: " + curToken);
+            }
+            public ParseResult<Expression> visitIntegerToken(final int value) throws ParseException {
+                return new ParseResult<Expression>(new IntegerExpression(value),
+                                                   startPos + 1);
+            }
+            public ParseResult<Expression> visitVariableToken(final String name) throws ParseException {
+                return new ParseResult<Expression>(new VariableExpression(name),
+                                                   startPos + 1);
+            }
+            public ParseResult<Expression> visitBooleanToken(final boolean value) throws ParseException {
+                return new ParseResult<Expression>(new BooleanExpression(value),
+                                                   startPos + 1);
+            }
+            public ParseResult<Expression> visitLeftParenToken() throws ParseException {
+                final ParseResult<Expression> inner = parseExpression(startPos + 1);
+                ensureTokenIs(inner.nextPosition, new RightParenToken());
                 return new ParseResult<Expression>(inner.result,
                                                    inner.nextPosition + 1);
-            } else {
-                throw new ParseException("Missing right parenthesis");
             }
-        } else {
-            throw new ParseException("Not a primary expression");
-        }
+        } // PrimaryVisitor
+
+        return curToken.accept(new PrimaryVisitor());
     } // parsePrimary
 
     public ParseResult<Type> parseType(final int startPos) throws ParseException {
