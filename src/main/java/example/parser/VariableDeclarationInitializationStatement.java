@@ -42,4 +42,8 @@ public class VariableDeclarationInitializationStatement implements Statement {
                 expression.toString() +
                 ";");
     }
+
+    public <A, E extends Throwable> A accept(final StatementVisitor<A, E> visitor) throws E {
+        return visitor.visitVariableDeclarationInitializationStatement(type, variableName, expression);
+    } // accept
 } // VariableDeclarationInitializationStatement
