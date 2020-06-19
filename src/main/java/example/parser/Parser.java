@@ -184,13 +184,20 @@ public class Parser {
 
     public ParseResult<Type> parseType(final int startPos) throws ParseException {
         final Token curToken = readToken(startPos);
-        if (curToken instanceof IntTypeToken) {
-            return new ParseResult<Type>(new IntType(), startPos + 1);
-        } else if (curToken instanceof BoolTypeToken) {
-            return new ParseResult<Type>(new BoolType(), startPos + 1);
-        } else {
-            throw new ParseException("Expected type; got: " + curToken);
-        }
+
+        class TypeVisitor extends DefaultTokenVisitor<ParseResult<Type>, ParseException> {
+            public ParseResult<Type> defaultAction() throws ParseException {
+                throw new ParseException("Expected type; got: " + curToken);
+            }
+            public ParseResult<Type> visitIntTypeToken() throws ParseException {
+                return new ParseResult<Type>(new IntType(), startPos + 1);
+            }
+            public ParseResult<Type> visitBoolTypeToken() throws ParseException {
+                return new ParseResult<Type>(new BoolType(), startPos + 1);
+            }
+        } // TypeVisitor
+
+        return curToken.accept(new TypeVisitor());
     } // parseType
 
     public ParseResult<String> parseVariable(final int startPos) throws ParseException {
