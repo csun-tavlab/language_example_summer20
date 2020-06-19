@@ -6,6 +6,25 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class Typechecker {
+    // ---BEGIN CONSTANTS---
+    public static final Map<Op, OpDesc> OPERATORS;
+    static {
+        OPERATORS = new HashMap<Op, OpDesc>();
+        final OpDesc intOp = new OpDesc(new IntType(),
+                                        new IntType(),
+                                        new IntType());
+        final OpDesc boolOp = new OpDesc(new BoolType(),
+                                         new BoolType(),
+                                         new BoolType());
+        OPERATORS.put(new PlusOp(), intOp);
+        OPERATORS.put(new MinusOp(), intOp);
+        OPERATORS.put(new MultiplyOp(), intOp);
+        OPERATORS.put(new DivisionOp(), intOp);
+        OPERATORS.put(new AndOp(), boolOp);
+        OPERATORS.put(new OrOp(), boolOp);
+    }
+    // ---END CONSTANTS---
+    
     // ---BEGIN INSTANCE VARIABLES---
     private final Map<String, Type> typeEnv;
     // ---END INSTANCE VARIABLES---
@@ -49,43 +68,46 @@ public class Typechecker {
         statement.accept(new WellTypedStatementVisitor());
     } // isWellTyped(Statement)
 
-    // typeOfExpression(1) // IntType
-    // typeOfExpression(true) // BoolType
-    public Type typeOfExpression(final Expression expression) throws IllTypedException {
-        if (expression instanceof IntegerExpression) {
-            return new IntType();
-        } else if (expression instanceof VariableExpression) {
-            final String variableName = ((VariableExpression)expression).name;
-            final Type variableType = variableType(variableName);
-            if (variableType == null) {
-                throw new IllTypedException("variable not in scope: " + variableName);
-            } else {
-                return variableType;
-            }
-        } else if (expression instanceof BooleanExpression) {
-            return new BoolType();
-        } else if (expression instanceof OperatorExpression) {
-            final OperatorExpression asOp = (OperatorExpression)expression;
-            final Type e1Type = typeOfExpression(asOp.e1);
-            final Type e2Type = typeOfExpression(asOp.e2);
-            final Op op = asOp.op;
-            if ((op instanceof PlusOp ||
-                 op instanceof MinusOp ||
-                 op instanceof MultiplyOp ||
-                 op instanceof DivisionOp) && // int (+|-|*|/) int = int
-                e1Type instanceof IntType &&
-                e2Type instanceof IntType) {
-                return new IntType();
-            } else if ((op instanceof AndOp || // bool (&& | ||) bool = bool
-                        op instanceof OrOp) &&
-                       e1Type instanceof BoolType &&
-                       e2Type instanceof BoolType) {
-                return new BoolType();
-            } else {
-                throw new IllTypedException("Type error involving operator: " + op);
-            }
+    public Type opType(final Type leftType,
+                       final Op op,
+                       final Type rightType) throws IllTypedException {
+        final OpDesc expected = OPERATORS.get(op);
+        if (expected.expectedLeft.equals(leftType) &&
+            expected.expectedRight.equals(rightType)) {
+            return expected.returnType;
         } else {
-            throw new IllTypedException("Unrecognized expression: " + expression);
+            throw new IllTypedException("Type error involving operator: " + op);
         }
-    }
-}
+    } // opType
+                
+    public Type typeOfExpression(final Expression expression) throws IllTypedException {
+        class TypeOfExpressionVisitor implements ExpressionVisitor<Type, IllTypedException> {
+            public Type visitIntegerExpression(final int value) throws IllTypedException {
+                return new IntType();
+            } // visitIntegerExpression
+            
+            public Type visitVariableExpression(final String name) throws IllTypedException {
+                final Type type = variableType(name);
+                if (type == null) {
+                    throw new IllTypedException("variable not in scope: " + name);
+                } else {
+                    return type;
+                }
+            } // visitVariableExpression
+
+            public Type visitBooleanExpression(final boolean value) throws IllTypedException {
+                return new BoolType();
+            } // visitBooleanExpression
+
+            public Type visitOperatorExpression(final Expression e1,
+                                                final Op op,
+                                                final Expression e2) throws IllTypedException {
+                final Type e1Type = typeOfExpression(e1);
+                final Type e2Type = typeOfExpression(e2);
+                return opType(e1Type, op, e2Type);
+            } // visitOperatorExpression
+        } // TypeOfExpressionVisitor
+
+        return expression.accept(new TypeOfExpressionVisitor());
+    } // typeOfExpression
+} // Typechecker
